@@ -1,0 +1,141 @@
+-- TABLES CREATION
+CREATE TABLE EMPLOYEE(
+    employee_id NUMBER(6) NOT NULL PRIMARY KEY,
+    employee_name VARCHAR2(30),
+    employee_role VARCHAR2(10)
+    );
+        
+CREATE TABLE CUSTOMER(
+    customer_id NUMBER(6) NOT NULL PRIMARY KEY,
+    customer_name VARCHAR2(30)
+    );
+    
+CREATE TABLE SALE(
+    sale_no NUMBER(6) NOT NULL PRIMARY KEY,
+    sale_date DATE,
+    employee_id NUMBER(6),
+    customer_id NUMBER(6),
+    sale_total NUMBER(10,2),
+    FOREIGN  KEY (employee_id) REFERENCES EMPLOYEE(employee_id),
+    FOREIGN  KEY (customer_id) REFERENCES CUSTOMER(customer_id)
+    );
+    
+CREATE TABLE PRODUCT(
+    product_id NUMBER(6) NOT NULL PRIMARY KEY,
+    product_name VARCHAR2(40),
+    unit_price NUMBER(10,2),
+    product_type VARCHAR2(2),
+    screen_size VARCHAR2(20),
+    cpu VARCHAR2(20),
+    ram_GB NUMBER(2),
+    battery_mAH NUMBER(10),
+    colour VARCHAR2(20),
+    quantity_in_stock NUMBER(4)
+    );
+    
+CREATE TABLE SALE_LINE(
+    sale_no NUMBER(6),
+    product_id NUMBER(6),
+    quantity_sold NUMBER(3),
+    line_total NUMBER(10,2),
+    FOREIGN  KEY (sale_no) REFERENCES SALE(sale_no),
+    FOREIGN  KEY (product_id) REFERENCES PRODUCT(product_id),
+    CONSTRAINT PK_SALE_LINE PRIMARY KEY (sale_no, product_id)
+    );
+
+--INSERT CUSTOMER
+INSERT INTO CUSTOMER VALUES (1, 'Charles Boyle');
+INSERT INTO CUSTOMER VALUES (2, 'Ted Mosby');
+INSERT INTO CUSTOMER VALUES (3, 'Barney Stinson');
+INSERT INTO CUSTOMER VALUES (4, 'Monika Geller');
+INSERT INTO CUSTOMER VALUES (5, 'Bob Ross');
+INSERT INTO CUSTOMER VALUES (6, 'Carl Sagan');
+INSERT INTO CUSTOMER VALUES (7, 'Johnny Silverhand');
+
+--INSERT EMPLOYEE
+INSERT INTO EMPLOYEE VALUES (1, 'Chandler Bing', 'Manager');
+INSERT INTO EMPLOYEE VALUES (2, 'Peter Parker', 'Manager');
+INSERT INTO EMPLOYEE VALUES (3, 'Jake Peralta', 'Sales');
+INSERT INTO EMPLOYEE VALUES (4, 'Raymond Holt', 'Sales');
+INSERT INTO EMPLOYEE VALUES (5, 'Chadwick Boseman', 'Sales');
+INSERT INTO EMPLOYEE VALUES (6, 'Till Lindemann', 'Sales');
+INSERT INTO EMPLOYEE VALUES (7, 'Serj Tankian', 'Sales');
+
+--INSERT PRODUCT
+INSERT INTO PRODUCT VALUES (1, 'Samsung', 700, 'SP', '6.3 inch', 'Snapdragon 888', 8, 5100, 'Grey', 7);
+INSERT INTO PRODUCT VALUES (2, 'iPhone 17', 1099.99, 'SP', '6.1 inch', 'A13 Bionic', 8, 4800, 'Silver', 6);
+INSERT INTO PRODUCT VALUES (3, 'HTC', 450, 'SP', '8 inch', 'Kiriko 655', 6, 4500, 'Black', 7);
+INSERT INTO PRODUCT VALUES (4, 'Samsung Tab S8', 1000, 'TB', '12 inch', 'Quadcom A2',  12, 8000, 'Blue', 7);
+INSERT INTO PRODUCT VALUES (5, 'Lenovo M10', 700, 'TB', '13 inch', 'i7',  10, 12000, 'Black', 5);
+INSERT INTO PRODUCT VALUES (6, 'iPhone 11', 750, 'SP', '6.5 inch', 'A14 Bionic', 6, 5200, 'Black', 11);
+INSERT INTO PRODUCT VALUES (7, 'Samsung USB Charger', 19.99, 'AC', NULL, NULL, NULL, NULL, 'White', 13);
+INSERT INTO PRODUCT VALUES (8, 'iPhone 11 Case', 29.99, 'AC', NULL, NULL, NULL, NULL, 'Blue', 17);
+INSERT INTO PRODUCT VALUES (9, 'Android 3.0 Charger', 10, 'AC', NULL, NULL,  NULL, NULL, 'White', 5);
+INSERT INTO PRODUCT VALUES (10, 'Pixel Charger', 10, 'AC', NULL, NULL,  NULL, NULL, 'White', 11);
+INSERT INTO PRODUCT VALUES (11, 'Lenovo PowerBank', 39.99, 'AC', NULL, NULL,  NULL, 15000, 'Black', 19);
+INSERT INTO PRODUCT VALUES (12, 'Xiaomi PowerBank', 30, 'AC', NULL, NULL,  NULL, 20000, 'Blue', 12);
+
+--INSERT SALE
+INSERT INTO SALE VALUES (1, TO_DATE('3-JUNE-2019', 'DD-MON-YYYY'), 3, 2, 749.99);
+INSERT INTO SALE_LINE VALUES (1, 1, 1, 700);
+INSERT INTO SALE_LINE VALUES (1, 3, 2, 30);
+INSERT INTO SALE_LINE VALUES (1, 4, 1, 29.99);
+INSERT INTO SALE VALUES (2, TO_DATE('3-JUNE-2019', 'DD-MON-YYYY'), 4, 4, 1000);
+INSERT INTO SALE_LINE VALUES (2, 8, 1, 1000);
+INSERT INTO SALE VALUES (3, TO_DATE('3-JUNE-2019', 'DD-MON-YYYY'), 3, 2, 829.99);
+INSERT INTO SALE_LINE VALUES (3, 10, 1, 1100);
+INSERT INTO SALE_LINE VALUES (3, 9, 1, 29.99);
+INSERT INTO SALE VALUES (4, TO_DATE('14-AUG-2019', 'DD-MON-YYYY'), 6, 5, 1299);
+INSERT INTO SALE_LINE VALUES (4, 8, 1, 1000);
+INSERT INTO SALE VALUES (5, TO_DATE('19-JAN-2019', 'DD-MON-YYYY'), 3, 4, 90.99);
+INSERT INTO SALE_LINE VALUES (5, 9, 2, 59.98);
+INSERT INTO SALE VALUES (6, TO_DATE('07-JAN-2019', 'DD-MON-YYYY'), 5, 4, 902);
+INSERT INTO SALE_LINE VALUES (6, 5, 1, 650);
+INSERT INTO SALE_LINE VALUES (6, 6, 1, 10);
+INSERT INTO SALE VALUES (7, TO_DATE('17-JAN-2019', 'DD-MON-YYYY'), 7, 1, 1640);
+INSERT INTO SALE_LINE VALUES (7, 8, 2, 2000);
+
+-- COURSEWORK QUESRIES
+--(Q1 what product models have a power capacity of at least 5000 mAh.)
+SELECT product_id, product_name, '£' || unit_price as unit_price, product_type, screen_size, cpu, ram_GB, battery_mAH, colour, quantity_in_stock FROM PRODUCT
+WHERE battery_mAH >= 5000;
+--(Q2 find the model number and price of all products (of any type) in ‘Blue’ colour.)
+SELECT product_id, '£' || unit_price as unit_price, colour 
+FROM PRODUCT
+WHERE colour = 'Blue';
+--(Q3 find the model numbers of all smart phone with more than 6GB memory.)
+SELECT product_id, product_name, ram_GB FROM PRODUCT WHERE ram_GB > 6 AND product_type = 'SP';
+--(Q4 details of sales that are handled by an individual salesperson.)
+SELECT EMPLOYEE.employee_name, SALE.sale_no, SALE.sale_date, '£' || SALE.sale_total as sale_total FROM SALE
+JOIN EMPLOYEE ON EMPLOYEE.employee_id = SALE.employee_id WHERE SALE.employee_id = 3;
+--(Q5 list of tablets which have been sold on a particular day.)
+SELECT PRODUCT.product_id, PRODUCT.product_name, PRODUCT.product_type, SALE.sale_date, PRODUCT.product_name, '£' || PRODUCT.unit_price as unit_price, PRODUCT.screen_size, PRODUCT.cpu, PRODUCT.ram_GB, PRODUCT.battery_mAH, PRODUCT.colour, SUM(SALE_LINE.quantity_sold) as quantity_sold
+FROM SALE JOIN SALE_LINE ON SALE.sale_no = SALE_LINE.sale_no
+JOIN PRODUCT ON SALE_LINE.product_id = PRODUCT.product_id AND PRODUCT.product_type = 'TB'
+WHERE SALE.sale_date = '3-JUN-2019'
+GROUP BY PRODUCT.product_id, PRODUCT.product_name, PRODUCT.product_type, SALE.sale_date, PRODUCT.product_name, PRODUCT.unit_price, PRODUCT.screen_size, PRODUCT.cpu, PRODUCT.ram_GB, PRODUCT.battery_mAH, PRODUCT.colour;
+--(Q6 details of the purchases a particular customer has made.)
+SELECT CUSTOMER.customer_name, SALE.sale_no, SALE.sale_date, PRODUCT.product_id, PRODUCT.product_name, PRODUCT.product_type, '£' || PRODUCT.unit_price as unit_price, SALE_LINE.quantity_sold, '£' || SALE_LINE.line_total as line_total
+FROM SALE
+JOIN SALE_LINE ON SALE.sale_no = SALE_LINE.sale_no
+JOIN PRODUCT ON SALE_LINE.product_id = PRODUCT.product_id
+JOIN CUSTOMER ON CUSTOMER.customer_id = SALE.customer_id
+WHERE SALE.customer_id = 4;
+--(Q7 Find the total sales for each salesperson)
+SELECT EMPLOYEE.employee_name, SUM(SALE.sale_total) as total_sales
+FROM SALE
+JOIN EMPLOYEE ON EMPLOYEE.employee_id = SALE.employee_id
+GROUP BY EMPLOYEE.employee_name;
+--(Q8 Find the most sold product)
+SELECT PRODUCT.product_id, PRODUCT.product_name, SUM(SALE_LINE.quantity_sold) as total_quantity_sold
+FROM SALE_LINE
+JOIN PRODUCT ON PRODUCT.product_id = SALE_LINE.product_id
+GROUP BY PRODUCT.product_id, PRODUCT.product_name
+ORDER BY total_quantity_sold DESC
+FETCH FIRST 1 ROWS ONLY;
+
+--DATA
+SELECT * FROM PRODUCT;
+SELECT * FROM CUSTOMER;
+SELECT * FROM EMPLOYEE;
+SELECT * FROM SALE;
